@@ -1,1 +1,132 @@
-<h1>hi</h1>
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Satalia | Beer Map</title>
+  </head>
+
+
+  <body>
+        <script async defer
+        type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwm0bOth-uz2DZiv3rzy6tV3sJhxdpg2Y&callback=initMap">
+    </script>
+    <script>
+        var beer_icon = "{% static "images/beer.png" %}";
+    </script>
+
+    <form action='.' method='POST'> {% csrf_token %}
+        {{ form.as_p }}
+        <input type='submit' value='Search' />
+    </form>
+
+    <div id="map_container"></div>
+
+    <div id="panel">
+        <input type="checkbox" id="show-breweries" checked onclick="toggleMarkers();"> Show Breweries
+        <input type="checkbox" id="show-path" onclick="toggleLine();"> Show Optimal Path
+    </div>
+
+
+    <script>
+
+        function toggleMarkers() {
+            if (document.getElementById('show-breweries').checked) {
+                showMarkers();
+            } else {
+                clearMarkers();
+            }
+        }
+
+        function toggleLine() {
+            if (document.getElementById('show-path').checked) {
+                addLine();
+            } else {
+                removeLine();
+            }
+        }
+
+        var flightPath;
+        var map;
+        var bounds = new google.maps.LatLngBounds();
+        var markers = [];
+
+        function initMap() {
+            var mapOptions = {
+                zoom: 4,
+                center: new google.maps.LatLng(39, -100),
+            };
+
+            map = new google.maps.Map(document.getElementById('map_container'), mapOptions);
+            var breweries = [
+                ['Albany Supercharger', 42.710356, -73.819109],
+            ];
+
+            var flightPlanCoordinates = [];
+            var len = breweries.length;
+            for (var i = 0; i < len; i++) {
+                var myLatLng = new google.maps.LatLng(breweries[i][1], breweries[i][2]);
+                flightPlanCoordinates.push(myLatLng);
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    icon: beer_icon,
+                    title: breweries[i][0]
+                });
+                markers.push(marker);
+                bounds.extend(marker.getPosition());
+            }
+            // connect back to first node
+            flightPlanCoordinates.push(new google.maps.LatLng(breweries[0][1], breweries[0][2]));
+
+            flightPath = new google.maps.Polyline({
+                path: flightPlanCoordinates,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            // addLine();
+            // overall display settings
+            map.setCenter(bounds.getCenter());
+            map.fitBounds(bounds);
+        }
+
+        function addLine() {
+            flightPath.setMap(map);
+        }
+
+        function removeLine() {
+            flightPath.setMap(null);
+        }
+
+        // Sets the map on all markers in the array.
+        function setAllMap(map) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+        }
+
+        // Removes the markers from the map, but keeps them in the array.
+        function clearMarkers() {
+            setAllMap(null);
+        }
+
+        // Shows any markers currently in the array.
+        function showMarkers() {
+            setAllMap(map);
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+  </body>
+
+</html>
+
+
+
+
