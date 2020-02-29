@@ -2,7 +2,7 @@
 import numpy as np
 import timeit
 
-from .models import Brewery
+from .models import Brewery, Beer
 
 # Max distance that helicopter can travel.
 MAX_DISTANCE = 2000
@@ -65,6 +65,17 @@ def construct_distance_row(current_node, nodes):
     return row
 
 
+
+def get_beers(nodes):
+    beers = []
+    for node in nodes:
+        if node.id == HOME_NODE:
+            continue
+        brewery = Brewery.objects.filter(id=node.id)[0]
+        brewery_beers = Beer.objects.filter(brewery=brewery)
+        beers += brewery_beers
+    return beers
+
 def TSP(matrix, nodes):
     # Adding the home node as the first move.
     solution_vector = [nodes[0]]
@@ -91,6 +102,8 @@ def greedy_solution(matrix, nodes, solution, visited, distance_travelled):
     print("Mileage left: %f home_distance: %f" % (mileage_left, home_distance))
     # Mark node as visited.
     nodes[index].visited = True
+    # Update and round node's distance.
+    nodes[index].distance = round(min)     
     # If we can return home, add the home node and end search.
     if mileage_left < 100 and mileage_left > 0:
         distance_travelled += min + home_distance
@@ -126,3 +139,4 @@ class Node:
         self.lat = lat
         self.long = long
         self.visited = False
+        self.distance = 0

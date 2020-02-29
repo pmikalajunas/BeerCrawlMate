@@ -5,26 +5,14 @@
   <head>
     <meta charset="UTF-8">
     <title>Satalia | Beer Map</title>
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map_container {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-				width: 80%;
-        height: 80%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
+    <link rel="stylesheet" href="{% static "css/table.css" %}">
+    <link rel="stylesheet" href="{% static "css/map.css" %}">
     <script>
         var beer_icon = "{% static "images/beer.png" %}";
         var home_icon = "{% static "images/home.png" %}";
 				let breweries = [
-            {% for brewery in solution %}
-              ['{{ brewery.name }}', {{ brewery.lat }}, {{ brewery.long }}],
+            {% for location in solution %}
+              ['{{ location.name }}', {{ location.lat }}, {{ location.long }}],
             {% endfor %}            
         ];
     </script> 
@@ -32,8 +20,6 @@
 
 
   <body>
-
-*
     <form action='.' method='POST'> {% csrf_token %}
         {{ form.as_p }}
         <input type='submit' value='Search' />
@@ -45,6 +31,54 @@
 			<input type="checkbox" id="show-breweries" checked onclick="toggleMarkers();"> Show Breweries
 			<input type="checkbox" id="show-path" onclick="toggleLine();"> Show Optimal Path
     </div>
+
+  <h1>Route</h1>
+  <h2>In total, we have traveled {{ distance_travelled }}km</h2>
+  <table id="respTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Location</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Distance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for location in solution %}
+        <tr>
+          <td>{{ location.id }}</td>
+          <td>{{ location.name }}</td>
+          <td>{{ location.lat }}</td>
+          <td>{{ location.long }}</td>
+          <td>{{ location.distance }}km</td>
+        </tr> 
+      {% endfor %}  
+    </tbody>
+  </table>
+
+  <h1>Beers</h1>
+  <h2>In total, we have collected {{ beer_count }} different beers</h2>
+  <table id="respTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Brewery</th>
+        <th>Name</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for beer in beers %}
+        <tr>
+          <td>{{ beer.id }}</td>
+          <td>{{ beer.brewery.name }}</td>
+          <td>{{ beer.name }}</td>
+          <td>{{ beer.category.name }}</td>
+        </tr> 
+      {% endfor %}  
+    </tbody>
+  </table>
 
 
   </body>

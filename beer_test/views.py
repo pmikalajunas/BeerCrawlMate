@@ -23,10 +23,14 @@ def home_view(request):
             print('It took %dms to construct distance matrix' % matrix_time)
             print("Matrix contains %d nodes" % len(nodes))
             total_distance, solution = TSP(matrix, nodes)
-            print("Total distacne travelled: %f" % total_distance)
+            print("Total distance travelled: %f" % total_distance)
+            beers = get_beers(solution)
             
     data = {
         "solution": solution,
-        "form": submit_form
+        "form": submit_form,
+        "distance_travelled": round(total_distance),
+        "beers": beers,
+        "beer_count": len(beers)
     }
     return render(request, 'home.html', data)
