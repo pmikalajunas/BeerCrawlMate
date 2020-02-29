@@ -30,13 +30,18 @@ def haversine(lat1, lon1, lat2, lon2):
 
 
 def create_nodes(home_lat, home_long):
-    nodes = [Node(HOME_NODE, home_lat, home_long)]
+    node_index = 0
+    # Initialize home node.
+    nodes = [Node(node_index, HOME_NODE, "Starting location", home_lat, home_long)]
+    nodes[node_index].visited = True
+   
     for brewery in Brewery.objects.all():
         distance = haversine(home_lat, home_long, brewery.latitude, brewery.longitude)
-        # If distance is more than it will take us to go forth and back, we'll ignore the brewery.
+        # If distance is more than it will take us to go back and forth, we'll ignore the brewery.
         if distance > (MAX_DISTANCE / 2):
             continue
-        nodes.append(Node(brewery.id, brewery.latitude, brewery.longitude))
+        node_index += 1
+        nodes.append(Node(node_index, brewery.id, brewery.name, brewery.latitude, brewery.longitude))
     return nodes
 
 
@@ -60,25 +65,64 @@ def construct_distance_row(current_node, nodes):
     return row
 
 
-def brute_force(matrix, nodes):
+def TSP(matrix, nodes):
     # Adding the home node as the first move.
     solution_vector = [nodes[0]]
-    for row in matrix:
-        min, index = find_min(row)
+    visited = [False] * len(matrix)
+    visited[0] = True
+    distance_travelled = 0.0
+    distance_travelled = greedy_solution(matrix, nodes, solution_vector, visited, distance_travelled)
+    return (distance_travelled, solution_vector)
 
 
-def find_min(row):
+def greedy_solution(matrix, nodes, solution, visited, distance_travelled):
+
+    N = len(matrix)
+    # Getting the previously visited node.
+    row = solution[len(solution) - 1].matrix_id
+    print('_______________________________________________________________')
+    print("Travelled: %f | Row id: %d" % (distance_travelled, row))
+
+    min, index = find_min(matrix[row], nodes)
+    print("Found node id: %d with distance %f" % (index, min))
+    # Can we go back home with remaining fuel?
+    home_distance = matrix[index][0]
+    mileage_left = MAX_DISTANCE - (distance_travelled + min + home_distance)    
+    print("Mileage left: %f home_distance: %f" % (mileage_left, home_distance))
+    # Mark node as visited.
+    nodes[index].visited = True
+    # If we can return home, add the home node and end search.
+    if mileage_left < 100 and mileage_left > 0:
+        distance_travelled += min + home_distance
+        solution.append(nodes[index])
+        solution.append(nodes[0])
+        return distance_travelled
+    # If we can't make it to the closest node, we go back home.    
+    if mileage_left < 0:
+        distance_travelled += home_distance
+        solution.append(nodes[0])
+        return distance_travelled
+
+    distance_travelled += min
+    solution.append(nodes[index])
+    return greedy_solution(matrix, nodes, solution, visited, distance_travelled)
+
+
+def find_min(row, nodes):
     min = float('inf')
     index = 0
     for i in range(len(row)):
-        if row[i] < min:
+        if row[i] < min and nodes[i].visited == False:
             min = row[i]
             index = i
     return (min, index)
 
 class Node:
-    def __init__(self, id, lat, long):
+    # matrix_id - node's index in the matrix.
+    def __init__(self, matrix_id, id, name, lat, long):
+        self.matrix_id = matrix_id
         self.id = id
+        self.name = name
         self.lat = lat
         self.long = long
         self.visited = False

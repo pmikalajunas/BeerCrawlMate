@@ -9,6 +9,8 @@ from beer_data.forms import SubmitForm
 def home_view(request):
     read_csv_data()
 
+    # Path that we are going to take.
+    solution = []
     submit_form = SubmitForm()
     if request.method == 'POST':
         submit_form = SubmitForm(request.POST)
@@ -19,8 +21,12 @@ def home_view(request):
             )
             matrix, matrix_time = construct_distance_matrix(nodes)
             print('It took %dms to construct distance matrix' % matrix_time)
-            print(len(nodes))
+            print("Matrix contains %d nodes" % len(nodes))
+            total_distance, solution = TSP(matrix, nodes)
+            print("Total distacne travelled: %f" % total_distance)
+            
     data = {
+        "solution": solution,
         "form": submit_form
     }
     return render(request, 'home.html', data)
