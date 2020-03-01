@@ -12,12 +12,12 @@
         var beer_icon = "{% static "images/beer.png" %}";
         var home_icon = "{% static "images/home.png" %}";
 				let breweries = [
-            {% for location in solution %}
+            {% for location in solution.route %}
               ['{{ location.name }}', {{ location.lat }}, {{ location.long }}],
             {% endfor %}            
         ];
-        var home_lat = {{ home_lat }};
-        var home_long = {{ home_long }};
+        var home_lat = {{ solution.home_lat }};
+        var home_long = {{ solution.home_long }};
     </script> 
   </head>
 
@@ -37,8 +37,8 @@
     </div>
 
   <h1>Route</h1>
-  <h4>In total, we have traveled {{ distance_travelled }}km, visiting {{ brewery_count }} different breweries</h4>
-  <h4>It took {{ running_time }}ms to execute the search</h4>
+  <p>In total, we have travelled {{ solution.distance_travelled }}km, visiting {{ solution.brewery_count }} different breweries</p>
+  <p>It took {{ solution.running_time }}ms to execute the search</p>
   <table id="respTable">
     <thead>
       <tr>
@@ -50,7 +50,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for location in solution %}
+      {% for location in solution.route %}
         <tr>
           <td>{{ location.id }}</td>
           <td>{{ location.name }}</td>
@@ -63,7 +63,7 @@
   </table>
 
   <h1>Beers</h1>
-  <h4>In total, we have collected {{ beer_count }} different beers</h4>
+  <p>In total, we have collected {{ solution.beer_count }} different beers</p>
   <table id="respTable">
     <thead>
       <tr>
@@ -74,7 +74,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for beer in beers %}
+      {% for beer in solution.beers %}
         <tr>
           <td>{{ beer.id }}</td>
           <td>{{ beer.brewery.name }}</td>

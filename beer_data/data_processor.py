@@ -1,8 +1,8 @@
 
 import numpy as np
-import timeit
 
 from .models import Brewery, Beer
+from .node import *
 
 # Max distance that helicopter can travel.
 MAX_DISTANCE = 2000
@@ -17,7 +17,6 @@ HOME_NODE_INDEX_MATRIX = 0
 # Calculates Harvesine distance between (lat1, lon1) and (lat2, lon2)
 # Returns harvesine distance in kilometers.
 def haversine(lat1, lon1, lat2, lon2): 
-
     # If we are dealing with the same node, skip the calculations.
     if lat1 == lat2 and lon1 == lon2:
         return 0
@@ -28,7 +27,6 @@ def haversine(lat1, lon1, lat2, lon2):
     dlat = lat2 - lat1
 
     a = np.sin(dlat/2.0)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2.0)**2
-
     c = 2 * np.arcsin(np.sqrt(a))
     km = EARTH_RADIUS * c
     return km
@@ -159,17 +157,4 @@ def find_min(row, nodes):
             index = i
     return (min, index)
 
-class Node:
-    # matrix_id - node's index in the matrix.
-    def __init__(self, matrix_id, id, name, lat, long):
-        self.matrix_id = matrix_id
-        self.id = id
-        self.name = name
-        self.lat = lat
-        self.long = long
-        self.visited = False
-        self.distance = 0
 
-    def __str__(self):
-        return ("matrix_id: %d id: %d name: %s lat: %f long: %f" % 
-                (self.matrix_id, self.id, self.name, self.lat, self.long))
