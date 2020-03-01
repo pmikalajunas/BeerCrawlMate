@@ -1,0 +1,22 @@
+body {
+    font-family: "Verdana", Times, serif;
+}
+
+html, body {
+    width: 80%;
+    height: 80%;
+    margin: 0;
+    padding: 0;
+}
+
+.form-submit-button  {
+    background-color: #555555; 
+    border: none;
+    margin: 10px;
+    color: white;
+    padding: 9px 26px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}

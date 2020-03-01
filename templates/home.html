@@ -7,6 +7,7 @@
     <title>Satalia | Beer Map</title>
     <link rel="stylesheet" href="{% static "css/table.css" %}">
     <link rel="stylesheet" href="{% static "css/map.css" %}">
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
     <script>
         var beer_icon = "{% static "images/beer.png" %}";
         var home_icon = "{% static "images/home.png" %}";
@@ -15,14 +16,17 @@
               ['{{ location.name }}', {{ location.lat }}, {{ location.long }}],
             {% endfor %}            
         ];
+        var home_lat = {{ home_lat }};
+        var home_long = {{ home_long }};
     </script> 
   </head>
 
 
   <body>
+    <h1>Satalia Beer-Test</h1>
     <form action='.' method='POST'> {% csrf_token %}
         {{ form.as_p }}
-        <input type='submit' value='Search' />
+        <input type='submit' value='Search' class='form-submit-button' />
     </form>
 
     <div id="map_container"></div>
@@ -33,7 +37,8 @@
     </div>
 
   <h1>Route</h1>
-  <h2>In total, we have traveled {{ distance_travelled }}km</h2>
+  <h4>In total, we have traveled {{ distance_travelled }}km, visiting {{ brewery_count }} different breweries</h4>
+  <h4>It took {{ running_time }}ms to execute the search</h4>
   <table id="respTable">
     <thead>
       <tr>
@@ -58,7 +63,7 @@
   </table>
 
   <h1>Beers</h1>
-  <h2>In total, we have collected {{ beer_count }} different beers</h2>
+  <h4>In total, we have collected {{ beer_count }} different beers</h4>
   <table id="respTable">
     <thead>
       <tr>
@@ -79,7 +84,6 @@
       {% endfor %}  
     </tbody>
   </table>
-
 
   </body>
   <script

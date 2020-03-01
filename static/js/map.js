@@ -23,7 +23,7 @@ var markers = [];
 function initMap() {
     var mapOptions = {
         zoom: 4,
-        center: new google.maps.LatLng(39, -100),
+        center: new google.maps.LatLng(home_lat, home_long),
     };
 
     map = new google.maps.Map(document.getElementById('map_container'), mapOptions);
@@ -53,18 +53,20 @@ function initMap() {
         markers.push(marker);
         bounds.extend(marker.getPosition());
     }
-    // connect back to first node
-    flightPlanCoordinates.push(new google.maps.LatLng(breweries[0][1], breweries[0][2]));
+    // If path is not empty
+    if(len > 1) {
+        // connect back to first node
+        flightPlanCoordinates.push(new google.maps.LatLng(breweries[0][1], breweries[0][2]));
 
-    flightPath = new google.maps.Polyline({
-        path: flightPlanCoordinates,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
-    });
+        flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+    }
 
-    // addLine();
-    // overall display settings
+
     map.setCenter(bounds.getCenter());
     map.fitBounds(bounds);
 }
