@@ -3,6 +3,7 @@ from .data_processor import *
 from .node import Node
 from .models import Beer
 from .matrix import Matrix
+from beer_data.simulated_annealing import SimulatedAnnealing
 
 # Every solution will have 2 home nodes, as we have to get back home.
 HOME_NODE_COUNT = 2
@@ -23,8 +24,6 @@ class Solution(object):
         self.home_long = long
         self.beer_count = len(beers)
         self.brewery_count = len(route) - HOME_NODE_COUNT
-        # With increased beer count we reduce distance. 
-        # That is, fitness = distance / beer_count
         self.fitness = 0
     
     # Generates solution from given lat and long.
@@ -43,5 +42,10 @@ class Solution(object):
             solution = Solution(
                 route, Beer.get_beers(route), distance_travelled, (stop - start), home_lat, home_long
             )
-            solution.fitness = solution.distance_travelled / solution.beer_count
+            solution.fitness = matrix.get_route_fitness(route)
+            annealing = SimulatedAnnealing(solution, 0.95)
+            annealing.search(matrix)
         return solution
+
+
+    

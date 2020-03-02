@@ -34,3 +34,6 @@ class SolutionTestCase(TestCase):
             lat += CORD_INCREASE
             # Reset longitude
             long = LONG_MIN 
+
+
+

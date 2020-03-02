@@ -11,24 +11,23 @@ from .matrix import Matrix
 
 def TSP(matrix, nodes):
     # Adding the home node as the first move.
-    solution_vector = [nodes[0]]
+    route = [nodes[0]]
     distance_travelled = 0.0
-    distance_travelled = nearest_neighbour(matrix, nodes, solution_vector, distance_travelled)
+    distance_travelled = nearest_neighbour(matrix, nodes, route, distance_travelled)
     # Set fitness.
-    return (distance_travelled, solution_vector)
+    return (distance_travelled, route)
 
 
-def nearest_neighbour(matrix, nodes, solution, distance_travelled):
+def nearest_neighbour(matrix, nodes, route, distance_travelled):
 
     # Getting the previously visited node, first visited is home node.
-    previous_node = solution[len(solution) - 1].matrix_id
+    previous_node = route[len(route) - 1].matrix_id
 
     print('_______________________________________________________________')
     print("Travelled: %f | previous_node: %d" % (distance_travelled, previous_node))
-    print('Matrix:')
-    print('Nodes:')
-    for node in nodes:
-        print(node)
+    # print('Nodes:')
+    # for node in nodes:
+    #     print(node)
 
     min, index = matrix.find_min(previous_node, nodes)
 
@@ -46,7 +45,7 @@ def nearest_neighbour(matrix, nodes, solution, distance_travelled):
         # Calculate distance from previous node, because index is set to home.
         home_distance = matrix.get_node(HOME_NODE_INDEX_MATRIX, previous_node)        
         distance_travelled += home_distance
-        solution.append(nodes[HOME_NODE_INDEX_MATRIX])
+        route.append(nodes[HOME_NODE_INDEX_MATRIX])
         return distance_travelled
 
 
@@ -57,8 +56,8 @@ def nearest_neighbour(matrix, nodes, solution, distance_travelled):
     # Update and round node's distance.
     nodes[index].distance = round(min)     
     distance_travelled += min
-    solution.append(nodes[index])
-    return nearest_neighbour(matrix, nodes, solution, distance_travelled)
+    route.append(nodes[index])
+    return nearest_neighbour(matrix, nodes, route, distance_travelled)
 
 
 def find_min_heuristic(row, nodes):

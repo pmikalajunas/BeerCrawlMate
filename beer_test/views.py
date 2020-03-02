@@ -7,7 +7,7 @@ from beer_data.forms import SubmitForm
 
 from beer_data.solution import Solution
 from beer_data.util import validate_coordinates
-
+from beer_data.simulated_annealing import SimulatedAnnealing
 
 # Main view that displays map and tables.
 # There is a form to put coordinates for search.
@@ -26,6 +26,7 @@ def home_view(request):
             home_long = submit_form.cleaned_data.get('long')
             if validate_coordinates(home_lat, home_long):
                 solution = Solution.retrieve_solution(home_lat, home_long)
+
             
     data = {
         "solution": solution,
