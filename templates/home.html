@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Satalia | Beer Map</title>
+    <title>Satalia Beer-Test</title>
     <link rel="stylesheet" href="{% static "css/table.css" %}">
     <link rel="stylesheet" href="{% static "css/map.css" %}">
     <link rel="stylesheet" href="{% static "css/main.css" %}">
@@ -37,8 +37,9 @@
     </div>
 
   <h1>Route</h1>
-  <p>In total, we have travelled {{ solution.distance_travelled }}km, visiting {{ solution.brewery_count }} different breweries</p>
-  <p>It took {{ solution.running_time }}ms to execute the search</p>
+  <p>In total, we have travelled <b>{{ solution.distance_travelled }}km</b>, visiting <b>{{ solution.brewery_count }}</b> different breweries</p>
+  <p>It took <b>{{ solution.running_time }}ms</b> to execute the search</p>
+  <p>Solution fitness: <b>{{ solution.fitness }}</b> (distance / beer_count)</p>
   <table id="respTable">
     <thead>
       <tr>
@@ -63,7 +64,7 @@
   </table>
 
   <h1>Beers</h1>
-  <p>In total, we have collected {{ solution.beer_count }} different beers</p>
+  <p>In total, we have collected <b>{{ solution.beer_count }}</b> different beers</p>
   <table id="respTable">
     <thead>
       <tr>

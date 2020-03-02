@@ -13,7 +13,7 @@ from beer_data.util import validate_coordinates
 # There is a form to put coordinates for search.
 def home_view(request):
 
-    # Reads beer data from supplied csv files.
+    # Reads beer data from supplied csv files, initializes DB.
     read_csv_data()
 
     # Path that we are going to take.
