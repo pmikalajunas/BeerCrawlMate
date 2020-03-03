@@ -24,7 +24,7 @@ class SolutionTestCase(TestCase):
         
         while lat <= LAT_MAX:
             while long <= LONG_MAX:                
-                solution = Solution.retrieve_solution(lat, long)
+                solution = Solution.retrieve_solution(lat, long, 'Nearest Neighbour')
                 # Print ones that travelled somewhere.
                 if solution.distance_travelled > 0:
                     print('(TEST) lat: %f long: %f distance: %d beer count: %d' 

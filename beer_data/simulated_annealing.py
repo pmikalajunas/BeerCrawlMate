@@ -17,28 +17,46 @@ class SimulatedAnnealing(object):
         self.fitness_list = []
 
 
-    def search(self, matrix):     
+    def search(self, matrix, nodes): 
         while self.T >= self.stopping_T:
             print("T: %f" % self.T)
             print('_______________________________________')
             route = list(self.solution.route)
-            # Last node is the home node, exclude it from swapping.
-            node_a = random.randint(2, self.N - 1)
-            node_b = random.randint(0, self.N - node_a)
+            # Pick one node from the current route.
+            node_a = random.randint(1, self.N - 1)
+            # Pick one node from reachable nodes.
+            node_b = random.randint(1, len(nodes) - 1)
+
             print('node_a: %d node_b %d' % (node_a, node_b))
-            # Swap the nodes.
-            route[node_a : (node_a + node_b)] = reversed(route[node_a : (node_a + node_b)])
+            # Put the
+            
+            # If the node is not in the route, swap the nodes.
+            if not nodes[node_b].visited:
+                route[node_a] = nodes[node_b]
+                nodes[node_b].visited = True
+            # Otherwise both nodes are already in the current route.    
+            else:
+                b_index = self.find_index(route, nodes[node_b])
+                route[node_a], route[b_index] = route[b_index], route[node_a]
+                
             self.accept(route, matrix)
             self.T *= self.alpha
             self.fitness_list.append(self.fitness)
+
 
         if self.fitness_list:
             print("Best fitness obtained: ", self.best_fitness)
             improvement = 100 * (self.fitness_list[0] - self.best_fitness) / (self.fitness_list[0])
             print(f"Improvement over greedy heuristic: {improvement : .2f}%")
+        return (self.best_route, self.best_fitness)
 
 
-        
+    def find_index(self, route, node):
+        for i in range(len(route)):
+            if route[i] == node:
+                return i
+        return -1
+
     def accept(self, route, matrix):
 
         route_fitness = matrix.get_route_fitness(route)

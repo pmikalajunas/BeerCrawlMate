@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 gunicorn = "*"
 pandas = "*"
+networkx = "*"
 
 [requires]
 python_version = "3.7"

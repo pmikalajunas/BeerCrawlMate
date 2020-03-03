@@ -3,12 +3,16 @@ from .data_processor import *
 from .node import Node
 from .models import Beer
 from .matrix import Matrix
+from .christofides import Christofides
 from beer_data.simulated_annealing import SimulatedAnnealing
 
 # Every solution will have 2 home nodes, as we have to get back home.
 HOME_NODE_COUNT = 2
 # Floating point precision for running time.
 TIME_PRECISION = 4
+# Factor by which temperature will be decreased with each Annealing iteration.
+ALPHA = 0.95
+
 
 # Defines solution to a beer test problem.
 # Solution contains route, beers and other parameters.
@@ -27,7 +31,7 @@ class Solution(object):
         self.fitness = 0
     
     # Generates solution from given lat and long.
-    def retrieve_solution(home_lat, home_long):
+    def retrieve_solution(home_lat, home_long, algorithm):
         solution = Solution()
         # Measure execution time.
         start = timeit.default_timer()
@@ -35,6 +39,9 @@ class Solution(object):
 
         # Avoid processing, if we don't have any reachable nodes.
         if len(nodes) > 1:
+
+            
+
             matrix = Matrix()
             matrix.construct_distance_matrix(nodes)
             distance_travelled, route = TSP(matrix, nodes)
@@ -42,9 +49,20 @@ class Solution(object):
             solution = Solution(
                 route, Beer.get_beers(route), distance_travelled, (stop - start), home_lat, home_long
             )
-            solution.fitness = matrix.get_route_fitness(route)
-            annealing = SimulatedAnnealing(solution, 0.95)
-            annealing.search(matrix)
+            solution.fitness = round(matrix.get_route_fitness(route), 2)
+
+            if algorithm == 'Christofides':
+                christofides = Christofides()
+                christofides.tsp_circuit(nodes)
+
+
+            if algorithm == 'Simulated Annealing':
+                annealing = SimulatedAnnealing(solution, ALPHA)
+                route, fitness = annealing.search(matrix, nodes)
+                solution = Solution(
+                    route, Beer.get_beers(route), distance_travelled, (stop - start), home_lat, home_long
+                )
+                solution.fitness = round(fitness, 2)
         return solution
 
 

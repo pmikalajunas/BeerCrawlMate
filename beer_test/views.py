@@ -24,8 +24,9 @@ def home_view(request):
         if submit_form.is_valid():
             home_lat = submit_form.cleaned_data.get('lat')
             home_long = submit_form.cleaned_data.get('long')
+            algorithm = submit_form.cleaned_data.get('algorithm')
             if validate_coordinates(home_lat, home_long):
-                solution = Solution.retrieve_solution(home_lat, home_long)
+                solution = Solution.retrieve_solution(home_lat, home_long, algorithm)
 
             
     data = {
