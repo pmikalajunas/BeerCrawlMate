@@ -21,6 +21,7 @@ class Node(object):
         self.lat = round(lat, COORDINATE_FLOATING_PRECISION)
         self.long = round(long, COORDINATE_FLOATING_PRECISION)
         self.visited = False
+        # Distance from previous to current node.
         self.distance = 0
         self.beer_count = beer_count
 

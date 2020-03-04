@@ -7,8 +7,9 @@ class Matrix(object):
         self.matrix = []
 
     # Calculates distance from current_node to each node from nodes.
-    # Returns a list with distances. 
-    def construct_distance_row(self, current_node, nodes):
+    # Returns a list with distances.
+    @staticmethod
+    def construct_distance_row(current_node, nodes):
         row = []
         for node in nodes:
             row.append(haversine(current_node.lat, current_node.long, node.lat, node.long))

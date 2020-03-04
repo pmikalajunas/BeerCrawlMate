@@ -11,7 +11,7 @@ HOME_NODE_COUNT = 2
 # Floating point precision for running time.
 TIME_PRECISION = 4
 # Factor by which temperature will be decreased with each Annealing iteration.
-ALPHA = 0.95
+ALPHA = 0.98
 
 # In case you get lost, go back to the city that you love the most.
 LAT_KAUNAS = 54.8985
@@ -56,7 +56,7 @@ def retrieve_solution(home_lat, home_long, algorithm):
 
     return solution
 
-
+# Return solution found using Simulated Annealing algorithm.
 def get_sa_solution(nodes, home_lat, home_long):
     # Generate initial greedy solution and then alter.
     solution, matrix = get_nn_solution(nodes, home_lat, home_long)
@@ -68,25 +68,28 @@ def get_sa_solution(nodes, home_lat, home_long):
     stop = timeit.default_timer()
 
     time = greedy_time + (stop - start)
-    beers = Beer.get_beers(annealing.best_route)
+    beers = get_beers(annealing.best_route)
 
     solution = Solution(
         annealing.best_route, beers, annealing.best_distance, time, home_lat, home_long
     )
     solution.improvement = round(annealing.improvement, 2)
+    return solution
 
-
+# Return solution found using Simulated Annealing algorithm.
 def get_christofides_solution(nodes, home_lat, home_long):
     start = timeit.default_timer()
-    christofides = Christofides(nodes)
-    route, distance_travelled = christofides.tsp_circuit(nodes)
+    cfides = Christofides(nodes)
+    route, distance = cfides.search()
     stop = timeit.default_timer()
+
+    beers = get_beers(route)
     solution = Solution(
-        route, Beer.get_beers(route), distance_travelled, (stop - start), home_lat, home_long
+        route, beers, distance, (stop - start), home_lat, home_long
     )
     return solution
 
-
+# Return solution found using Greedy algorithm (nearest neighbour).
 def get_nn_solution(nodes, home_lat, home_long):
     start = timeit.default_timer()
     matrix = Matrix()
@@ -97,6 +100,6 @@ def get_nn_solution(nodes, home_lat, home_long):
 
     stop = timeit.default_timer()
     solution = Solution(
-        nn.route, Beer.get_beers(nn.route), nn.distance, (stop - start), home_lat, home_long
+        nn.route, get_beers(nn.route), nn.distance, (stop - start), home_lat, home_long
     )
     return solution, matrix

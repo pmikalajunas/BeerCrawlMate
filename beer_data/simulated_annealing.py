@@ -1,9 +1,8 @@
-import random
 import math
+import random
 
 from beer_data.node import MAX_DISTANCE
-from beer_data.solution import Beer
-from beer_data.util import find_index, get_overall_distance
+from beer_data.util import find_index, get_overall_distance, get_beers
 
 # Every solution will have 2 home nodes, as we have to get back home.
 HOME_NODE_COUNT = 2
@@ -70,7 +69,7 @@ class SimulatedAnnealing(object):
     # Based on probability and temperature, accepts the solution even if it's worse.
     def accept(self, route, distance):
         # Fitness is beer count added with the brewery count.
-        route_fitness = (len(route) - HOME_NODE_COUNT) + len(Beer.get_beers(route))
+        route_fitness = (len(route) - HOME_NODE_COUNT) + len(get_beers(route))
 
         # Solution should not exceed the travel limitations.
         if distance > MAX_DISTANCE:

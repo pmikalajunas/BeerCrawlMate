@@ -35,20 +35,16 @@ function initMap() {
         flightPlanCoordinates.push(myLatLng);
         // Put a different marker for home location.
         if(i == 0 || i == (len - 1)) {
-            var marker = new google.maps.Marker({
-                position: myLatLng,
-                map: map,
-                icon: home_icon,
-                title: breweries[i][0]
-            });
+            var my_icon = home_icon;
         } else {
-            var marker = new google.maps.Marker({
+            var my_icon = beer_icon;
+        }
+        var marker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
-                icon: beer_icon,
+                icon: my_icon,
                 title: breweries[i][0]
-            });
-        }
+        });
 
         markers.push(marker);
         bounds.extend(marker.getPosition());

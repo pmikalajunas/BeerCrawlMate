@@ -1,11 +1,14 @@
 import numpy as np
 
 # Coordinate boundaries for Google Maps.
+from beer_data.models import Brewery, Beer
+
 LAT_MIN = -85
 LAT_MAX = 85
 LONG_MIN = -180
 LONG_MAX = 180
-
+# Id of a home (starting) node.
+HOME_NODE_ID = -2
 # Earth radius (in KM)
 EARTH_RADIUS = 6367
 # First node in the matrix is the home node.
@@ -29,13 +32,26 @@ def find_index(list, elem):
             return i
     return -1
 
+# Returns a list of beers that each brewery in a list of nodes contains.
+def get_beers(nodes):
+    beers = []
+    for node in nodes:
+        if node.id == HOME_NODE_ID:
+            continue
+        brewery = Brewery.objects.filter(id=node.id)[0]
+        brewery_beers = Beer.objects.filter(brewery=brewery)
+        beers += brewery_beers
+    return beers
+
 
 # Returns route's distance.
 # Distance between nodes is calculated from distance matrix.
 def get_overall_distance(matrix, route):
     distance = 0
     for i, node in enumerate(route[:-1]):
-        distance += matrix.get_node(route[i + 1].matrix_id, route[i].matrix_id)
+        node_distance = matrix.get_node(route[i+1].matrix_id, route[i].matrix_id)
+        route[i+1].distance = round(node_distance, 2)
+        distance += node_distance
     return distance
 
 

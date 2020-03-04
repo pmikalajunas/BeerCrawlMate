@@ -3,7 +3,13 @@ import copy
 
 from .util import haversine
 
+# Id of the starting(home) node.
 HOME_NODE = 0
+# Distance after
+DISTANCE_LOWER_BOUND = 1750
+# Overall distance limit that we can't exceed.
+DISTANCE_HIGHER_BOUND = 2000
+
 
 class Christofides(object):
 
@@ -18,8 +24,10 @@ class Christofides(object):
         self.distance = 0
         self.route = []
 
-    def tsp_circuit(self, nodes):
-
+    # Performs search using Christofides algorithm.
+    # Find a minimum-weight perfect matching min_weight in the subgraph given by the vertices from odd_nodes
+    # Combine the edges of min_weight and mst to form a connected multigraph H in which each vertex has even degree.
+    def search(self):
         odd_nodes = self.get_nodes_with_odd_degree(self.mst)
         subgraph = self.graph.subgraph(odd_nodes)
 
@@ -29,27 +37,30 @@ class Christofides(object):
         path = self.hamilton_circuit(self.nodes[HOME_NODE])
         return path, self.distance
 
-
-    def hamilton_circuit(self, source):
-        ham_path = [source]
-
-        path_found = self.hamilton_circuit_helper(self.mst, source, ham_path)
+    # Returns optimal path.
+    def hamilton_circuit(self, home_node):
+        ham_path = [home_node]
+        path_found = self.hamilton_circuit_helper(self.mst, home_node, ham_path)
 
         if not path_found:
             return None
 
         return ham_path
 
-    def hamilton_circuit_helper(self, graph, source, ham_path):
+    # Make a Hamilton circuit by skipping repeated vertices.
+    # Path can be considered as finished once distance is between ...
+    # DISTANCE_LOWER_BOUND and DISTANCE_HIGHER_BOUND
+    # Then, we try to go to the home node, if we can't, we backtrack.
+    def hamilton_circuit_helper(self, graph, home_node, ham_path):
 
-        if 1800 < self.distance < 2000:
-            distance_to_source = haversine(
+        if DISTANCE_LOWER_BOUND < self.distance < DISTANCE_HIGHER_BOUND:
+            distance_to_home = haversine(
                 ham_path[-1].lat, ham_path[-1].long, self.nodes[HOME_NODE].lat, self.nodes[HOME_NODE].long
             )
-            distance = self.distance + distance_to_source
-            if distance < 2000:
-                ham_path.append(source)
-                self.distance += distance_to_source
+            distance = self.distance + distance_to_home
+            if distance < DISTANCE_HIGHER_BOUND:
+                ham_path.append(home_node)
+                self.distance += distance_to_home
                 return True
             else:
                 return False
@@ -59,8 +70,9 @@ class Christofides(object):
 
             if edge is not None and node not in ham_path:
                 ham_path.append(node)
+                node.distance = round(edge['weight'], 2)
                 self.distance += edge['weight']
-                if self.hamilton_circuit_helper(graph, source, ham_path):
+                if self.hamilton_circuit_helper(graph, home_node, ham_path):
                     return True
 
                 # Else, the path wasn't proper, so backtrack
@@ -69,14 +81,13 @@ class Christofides(object):
 
         return False
 
-
+    # Combine the edges of min_weight and mst to form a connected multigraph.
     def add_matching_to_mst(self, min_matching):
         for u, v, weight in min_matching:
             self.mst.add_edge(u, v, weight=weight)
 
-
-
     @staticmethod
+    # Add edges into the graph corresponding to the distance between two points.
     def add_edges(nodes, graph):
         # Add edges into the graph corresponding to the distance between two points.
         for i in nodes:
@@ -88,6 +99,7 @@ class Christofides(object):
                     y = j
 
     @staticmethod
+    # Finds all the vertices with odd degree.
     def get_nodes_with_odd_degree(graph):
         nodes = []
         for node in graph.nodes:
@@ -95,8 +107,8 @@ class Christofides(object):
                 nodes.append(node)
         return nodes
 
-
     @staticmethod
+    # Find a minimum-weight perfect matching M in the induced subgraph given the vertices from O.
     def min_weight_matching(graph):
         nodes = copy.copy(set(graph.nodes))
         matching = set()
