@@ -3,67 +3,77 @@ import copy
 
 from .util import haversine
 
-
-def min_weight_matching(G, nodess):
-    nodes = copy.deepcopy(set(G.nodes))
-
-    matching = set()
-
-    a = G.get_edge_data(nodess[212], nodess[59], default=None)
-
-    while nodes:
-        v = nodes.pop()
-        min_weight = float('inf')
-        closest = None
-
-        if not nodes:
-            raise ValueError("G has an odd number of nodes")
-
-        edge1 = G.get_edge_data(0, 1, default=None)
-        a = nodes.pop()
-        edge2 = G.get_edge_data(v, a, default=None)
-
-        for u in nodes:
-            edge = G.get_edge_data(u, v, default=None)
-            if edge is not None and edge['weight'] < min_weight:
-                min_weight = edge['weight']
-                closest = u
-
-        matching.add((v, closest, min_weight))
-        nodes.remove(closest)
-
-    return matching
-
+HOME_NODE = 0
 
 class Christofides(object):
 
-    def __init__(self):
+    def __init__(self, nodes):
         self.graph = nx.Graph()
-
-    def tsp_circuit(self, nodes):
-
+        self.nodes = nodes
         # Add all the nodes.
         for node in nodes:
             self.graph.add_node(node)
-
         self.add_edges(nodes, self.graph)
+        self.mst = nx.minimum_spanning_tree(self.graph)
+        self.distance = 0
+        self.route = []
 
-        x = None
-        y = None
+    def tsp_circuit(self, nodes):
 
-        a = self.graph.get_edge_data(nodes[0], nodes[188], default=None)
+        odd_nodes = self.get_nodes_with_odd_degree(self.mst)
+        subgraph = self.graph.subgraph(odd_nodes)
 
-        mst = nx.minimum_spanning_tree(self.graph)
+        min_weight = self.min_weight_matching(subgraph)
 
-        a = mst.get_edge_data(nodes[0], nodes[188], default=None)
+        self.add_matching_to_mst(min_weight)
+        path = self.hamilton_circuit(self.nodes[HOME_NODE])
+        return path, self.distance
 
-        # odd_nodes = self.get_nodes_with_odd_degree(mst)
-        # subgraph = self.graph.subgraph(odd_nodes)
-        # a = subgraph.get_edge_data(nodes[212], nodes[59], default=None)
 
-        min_weight = min_weight_matching(mst, nodes)
+    def hamilton_circuit(self, source):
+        ham_path = [source]
 
-        print(min_weight)
+        path_found = self.hamilton_circuit_helper(self.mst, source, ham_path)
+
+        if not path_found:
+            return None
+
+        return ham_path
+
+    def hamilton_circuit_helper(self, graph, source, ham_path):
+
+        if 1800 < self.distance < 2000:
+            distance_to_source = haversine(
+                ham_path[-1].lat, ham_path[-1].long, self.nodes[HOME_NODE].lat, self.nodes[HOME_NODE].long
+            )
+            distance = self.distance + distance_to_source
+            if distance < 2000:
+                ham_path.append(source)
+                self.distance += distance_to_source
+                return True
+            else:
+                return False
+
+        for node in graph.nodes:
+            edge = graph.get_edge_data(ham_path[-1], node, default=None)
+
+            if edge is not None and node not in ham_path:
+                ham_path.append(node)
+                self.distance += edge['weight']
+                if self.hamilton_circuit_helper(graph, source, ham_path):
+                    return True
+
+                # Else, the path wasn't proper, so backtrack
+                ham_path.pop(len(ham_path) - 1)
+                self.distance -= edge['weight']
+
+        return False
+
+
+    def add_matching_to_mst(self, min_matching):
+        for u, v, weight in min_matching:
+            self.mst.add_edge(u, v, weight=weight)
+
 
 
     @staticmethod
@@ -84,3 +94,25 @@ class Christofides(object):
             if nx.degree(graph, node) % 2 == 1:
                 nodes.append(node)
         return nodes
+
+
+    @staticmethod
+    def min_weight_matching(graph):
+        nodes = copy.copy(set(graph.nodes))
+        matching = set()
+
+        while nodes:
+            v = nodes.pop()
+            min_weight = float('inf')
+            closest = None
+
+            for u in nodes:
+                edge = graph.get_edge_data(u, v, default=None)
+                if edge is not None and edge['weight'] < min_weight:
+                    min_weight = edge['weight']
+                    closest = u
+
+            matching.add((v, closest, min_weight))
+            nodes.remove(closest)
+
+        return matching

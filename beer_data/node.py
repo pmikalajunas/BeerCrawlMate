@@ -1,4 +1,3 @@
-
 from .util import haversine
 from .models import Brewery
 
@@ -15,7 +14,7 @@ HOME_NODE_INDEX_MATRIX = 0
 # Node is an entity in a distance matrix.
 class Node(object):
     # matrix_id - node's index in the matrix.
-    def __init__(self, matrix_id, id, name, lat, long, beer_count = 0):
+    def __init__(self, matrix_id, id, name, lat, long, beer_count=0):
         self.matrix_id = matrix_id
         self.id = id
         self.name = name
@@ -45,9 +44,8 @@ class Node(object):
                 node_index, brewery.id, brewery.name, brewery.latitude, brewery.longitude, brewery.beer_count
             ))
         return nodes
-    
 
     # Made for debugging purposes to reflect Node's content.
     def __str__(self):
-        return ("matrix_id: %d id: %d name: %s lat: %f long: %f" % 
+        return ("matrix_id: %d id: %d name: %s lat: %f long: %f" %
                 (self.matrix_id, self.id, self.name, self.lat, self.long))

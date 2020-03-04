@@ -39,7 +39,11 @@
   <h1>Route</h1>
   <p>In total, we have travelled <b>{{ solution.distance_travelled }}km</b>, visiting <b>{{ solution.brewery_count }}</b> different breweries</p>
   <p>It took <b>{{ solution.running_time }}ms</b> to execute the search</p>
-  <p>Solution fitness: <b>{{ solution.fitness }}</b> (distance / beer_count)</p>
+  <p>Solution fitness: <b>{{ solution.fitness }}</b> (Beer Count + Visited Breweries)</p>
+  {% if solution.improvement != 0 %}
+      <p>Solution is <b>{{ solution.improvement }}%</b> better than the greedy solution</p>
+  {% endif %}
+
   <table id="respTable">
     <thead>
       <tr>

@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from .solution import *
 from .util import *
-from .data_processor import MAX_DISTANCE
+from .nearest_neighbour import MAX_DISTANCE
 from .csv_reader import read_csv_data
 
 # Number by which we increase coordinate with each iteration.

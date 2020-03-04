@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from beer_data.csv_reader import *
-from beer_data.data_processor import *
+from beer_data.nearest_neighbour import *
 from beer_data.forms import SubmitForm
 
-from beer_data.solution import Solution
+from beer_data.solution import Solution, retrieve_solution
 from beer_data.util import validate_coordinates
 from beer_data.simulated_annealing import SimulatedAnnealing
 
@@ -26,7 +26,7 @@ def home_view(request):
             home_long = submit_form.cleaned_data.get('long')
             algorithm = submit_form.cleaned_data.get('algorithm')
             if validate_coordinates(home_lat, home_long):
-                solution = Solution.retrieve_solution(home_lat, home_long, algorithm)
+                solution = retrieve_solution(home_lat, home_long, algorithm)
 
             
     data = {

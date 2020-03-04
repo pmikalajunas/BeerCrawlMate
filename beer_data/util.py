@@ -1,6 +1,5 @@
 import numpy as np
 
-
 # Coordinate boundaries for Google Maps.
 LAT_MIN = -85
 LAT_MAX = 85
@@ -12,19 +11,37 @@ EARTH_RADIUS = 6367
 # First node in the matrix is the home node.
 HOME_NODE_INDEX_MATRIX = 0
 
+
 # Checks if coordinates are withing boundaries.
 # Returns True if coordinates are valid.
 # Returns False otherwise.
 def validate_coordinates(lat, long):
-    if lat >= LAT_MIN and lat <= LAT_MAX:
-        if long >= LONG_MIN and long <= LONG_MAX:
+    if LAT_MIN <= lat <= LAT_MAX:
+        if LONG_MIN <= long <= LONG_MAX:
             return True
     return False
 
 
+# Returns first index associated with (elem) in given (list).
+def find_index(list, elem):
+    for i in range(len(list)):
+        if list[i] == elem:
+            return i
+    return -1
+
+
+# Returns route's distance.
+# Distance between nodes is calculated from distance matrix.
+def get_overall_distance(matrix, route):
+    distance = 0
+    for i, node in enumerate(route[:-1]):
+        distance += matrix.get_node(route[i + 1].matrix_id, route[i].matrix_id)
+    return distance
+
+
 # Calculates Harvesine distance between (lat1, lon1) and (lat2, lon2)
 # Returns harvesine distance in kilometers.
-def haversine(lat1, lon1, lat2, lon2): 
+def haversine(lat1, lon1, lat2, lon2):
     # If we are dealing with the same node, skip the calculations.
     if lat1 == lat2 and lon1 == lon2:
         return 0
@@ -34,10 +51,7 @@ def haversine(lat1, lon1, lat2, lon2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    a = np.sin(dlat/2.0)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2.0)**2
+    a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2.0) ** 2
     c = 2 * np.arcsin(np.sqrt(a))
     km = EARTH_RADIUS * c
     return km
-
-
-
