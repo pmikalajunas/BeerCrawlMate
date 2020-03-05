@@ -8,6 +8,9 @@ from beer_data.util import validate_coordinates
 
 # Main view that displays map and tables.
 # There is a form to put coordinates for search.
+from beer_test.api_key import MAPS_API_KEY
+
+
 def home_view(request):
     # Reads beer data from supplied csv files, initializes DB.
     read_csv_data()
@@ -25,6 +28,7 @@ def home_view(request):
                 solution = retrieve_solution(home_lat, home_long, algorithm)
     data = {
         "solution": solution,
-        "form": submit_form
+        "form": submit_form,
+        "maps_api_key": MAPS_API_KEY
     }
     return render(request, 'home.html', data)

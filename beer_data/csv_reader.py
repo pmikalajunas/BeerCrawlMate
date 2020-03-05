@@ -25,7 +25,9 @@ def preprocess_database():
         Brewery.objects.create(
             id=-1,
             name="Unknown brewery",
-            beer_count=0
+            beer_count=0,
+            longitude=-1,
+            latitude=-1
         )
     if not Category.objects.filter(id=UNKNOWN_CATEGORY).exists():  
         Category.objects.create(

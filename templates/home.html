@@ -92,7 +92,9 @@
 
   </body>
   <script
-  	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwm0bOth-uz2DZiv3rzy6tV3sJhxdpg2Y">
+    {% if maps_api_key != "" %}
+  	    src="https://maps.googleapis.com/maps/api/js?key={{ maps_api_key }}">
+    {% endif %}
   </script>
 	<script src="{% static "js/map.js" %}"></script>
 </html>
