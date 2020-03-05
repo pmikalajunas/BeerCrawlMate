@@ -13,7 +13,13 @@ Solution implements 3 different algorithms: <br/><br/>
 
 ## Running
 
-First, we have to activate Python virtual environment: <br/>
+First, we have to add Google Maps API key into api_key.py file located inside beer_test folder
+
+```
+MAPS_API_KEY = "<INSERT API KEY HERE>"
+```
+
+We have to activate Python virtual environment: <br/>
 
 ```
 pipenv shell
