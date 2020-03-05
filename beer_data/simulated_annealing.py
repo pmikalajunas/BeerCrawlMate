@@ -36,7 +36,7 @@ class SimulatedAnnealing(object):
     # Simulated Annealing search, that randomly picks two nodes to be swapped.
     # One from current route, another from a list of reachable nodes.
     # Probability of accepting lower quality solution decreases with temperature.
-    def search(self, matrix, nodes):
+    def search(self, graph, nodes):
         while self.T >= self.stopping_T:
             # Create a temporary route.
             route = list(self.solution.route)
@@ -49,12 +49,12 @@ class SimulatedAnnealing(object):
             if not nodes[node_b].visited:
                 route[node_a] = nodes[node_b]
                 nodes[node_b].visited = True
-                distance = get_overall_distance(matrix, route)
+                distance = get_overall_distance(graph, route)
             # If both are in current route, swap them.
             else:
                 b_index = find_index(route, nodes[node_b])
                 route[node_a], route[b_index] = route[b_index], route[node_a]
-                distance = get_overall_distance(matrix, route)
+                distance = get_overall_distance(graph, route)
 
             self.accept(route, distance)
             self.T *= self.alpha

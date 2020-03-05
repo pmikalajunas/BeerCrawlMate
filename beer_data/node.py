@@ -9,7 +9,8 @@ MAX_DISTANCE = 2000
 HOME_NODE_ID = -2
 # First node in the matrix is the home node.
 HOME_NODE_INDEX_MATRIX = 0
-
+# Id of the starting(home) node.
+HOME_NODE = 0
 
 # Node is an entity in a distance matrix.
 class Node(object):

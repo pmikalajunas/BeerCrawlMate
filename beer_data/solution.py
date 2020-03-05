@@ -1,10 +1,10 @@
 import timeit
+
+from beer_data.simulated_annealing import SimulatedAnnealing
+from beer_data.util import get_beers
+from .christofides import Christofides
 from .nearest_neighbour import *
 from .node import Node
-from .models import Beer
-from .matrix import Matrix
-from .christofides import Christofides
-from beer_data.simulated_annealing import SimulatedAnnealing
 
 # Every solution will have 2 home nodes, as we have to get back home.
 HOME_NODE_COUNT = 2
@@ -59,12 +59,12 @@ def retrieve_solution(home_lat, home_long, algorithm):
 # Return solution found using Simulated Annealing algorithm.
 def get_sa_solution(nodes, home_lat, home_long):
     # Generate initial greedy solution and then alter.
-    solution, matrix = get_nn_solution(nodes, home_lat, home_long)
+    solution, graph = get_nn_solution(nodes, home_lat, home_long)
     greedy_time = solution.running_time
 
     start = timeit.default_timer()
     annealing = SimulatedAnnealing(solution, ALPHA)
-    annealing.search(matrix, nodes)
+    annealing.search(graph, nodes)
     stop = timeit.default_timer()
 
     time = greedy_time + (stop - start)
@@ -91,15 +91,13 @@ def get_christofides_solution(nodes, home_lat, home_long):
 
 # Return solution found using Greedy algorithm (nearest neighbour).
 def get_nn_solution(nodes, home_lat, home_long):
+
     start = timeit.default_timer()
-    matrix = Matrix()
-    matrix.construct_distance_matrix(nodes)
-
-    nn = NearestNeighbour(nodes, matrix)
+    nn = NearestNeighbour(nodes)
     nn.search()
-
     stop = timeit.default_timer()
+
     solution = Solution(
         nn.route, get_beers(nn.route), nn.distance, (stop - start), home_lat, home_long
     )
-    return solution, matrix
+    return solution, nn.graph

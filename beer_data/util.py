@@ -11,8 +11,6 @@ LONG_MAX = 180
 HOME_NODE_ID = -2
 # Earth radius (in KM)
 EARTH_RADIUS = 6367
-# First node in the matrix is the home node.
-HOME_NODE_INDEX_MATRIX = 0
 
 
 # Checks if coordinates are withing boundaries.
@@ -46,13 +44,13 @@ def get_beers(nodes):
 
 # Returns route's distance.
 # Distance between nodes is calculated from distance matrix.
-def get_overall_distance(matrix, route):
-    distance = 0
+def get_overall_distance(graph, route):
+    total_distance = 0
     for i, node in enumerate(route[:-1]):
-        node_distance = matrix.get_node(route[i+1].matrix_id, route[i].matrix_id)
+        node_distance = graph.get_distance(route[i+1], route[i])
         route[i+1].distance = round(node_distance, 2)
-        distance += node_distance
-    return distance
+        total_distance += node_distance
+    return total_distance
 
 
 # Calculates Harvesine distance between (lat1, lon1) and (lat2, lon2)

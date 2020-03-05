@@ -24,7 +24,7 @@ python manage.py runserver
 ```
 
 ### Tests
-Once virtual environment is activate, we can run tests with the following command: <br/>
+Once virtual environment is activated, we can run tests with the following command: <br/>
 
 ```
 python manage.py test
