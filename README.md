@@ -4,14 +4,14 @@
 </p>
 <br/>
 Solution uses Django framework, due to ease in creation of database.<br/>
-Solution implements 3 different algorithms:
+Solution implements 3 different algorithms: <br/><br/>
 <li>Greedy Search (Nearest-neighbour heuristic)</li>
 <li>Simulated Annealing</li>
 <li>Christofides Algorithm</li>
 
 
 
-### Running
+## Running
 
 First, we have to activate Python virtual environment: <br/>
 
@@ -23,9 +23,22 @@ Next, we have to run the Django server:
 python manage.py runserver
 ```
 
-### Tests
+## Tests
 Once virtual environment is activated, we can run tests with the following command: <br/>
 
 ```
 python manage.py test
+```
+
+## Docker
+To build a Docker image you have to execute following command:
+
+```
+docker build -t satalia-beer-test -f Dockerfile .
+```
+
+Run Docker container:
+
+```
+docker run -it satalia-beer-test
 ```
