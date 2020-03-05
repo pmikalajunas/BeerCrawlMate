@@ -9,7 +9,12 @@ Solution implements 3 different algorithms: <br/><br/>
 <li>Simulated Annealing</li>
 <li>Christofides Algorithm</li>
 
+## Docker Image
 
+Built Docker image can be downloaded from:
+```
+https://hub.docker.com/repository/docker/pmikalajunas/satalia-beer-test
+```
 
 ## Running
 
