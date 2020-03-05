@@ -57,5 +57,11 @@ docker build -t satalia-beer-test -f Dockerfile .
 Run Docker container:
 
 ```
-docker run -it -p 8888:8888 satalia_beer_test
+docker run -it -p 80:8888 satalia-beer-test
+```
+
+Access system via following URL:
+
+```
+localhost
 ```

@@ -44,8 +44,9 @@ CMD gunicorn beer_test.wsgi:application --bind 0.0.0.0:$PORT
 # Run docker with the following command:
 # docker run -it -p 8888:8888 satalia_beer_test
 
-#docker tag local-image:tagname new-repo:tagname
-#docker push new-repo:tagname
+
+#docker tag satalia-beer-test pmikalajunas/satalia-beer-test:satalia-beer-test
+#docker push pmikalajunas/satalia-beer-test:satalia-beer-test
 
 # Build docker image:
 # docker build -t satalia_beer_test -f Dockerfile .
