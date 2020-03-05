@@ -34,12 +34,18 @@ RUN pip3 install pipenv
 
 # Install project dependencies
 RUN pipenv install --skip-lock --system --dev
+# Setup database
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 EXPOSE 8888
 CMD gunicorn beer_test.wsgi:application --bind 0.0.0.0:$PORT
 
 # Run docker with the following command:
 # docker run -it -p 8888:8888 satalia_beer_test
+
+#docker tag local-image:tagname new-repo:tagname
+#docker push new-repo:tagname
 
 # Build docker image:
 # docker build -t satalia_beer_test -f Dockerfile .

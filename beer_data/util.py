@@ -33,12 +33,13 @@ def find_index(list, elem):
 # Returns a list of beers that each brewery in a list of nodes contains.
 def get_beers(nodes):
     beers = []
-    for node in nodes:
-        if node.id == HOME_NODE_ID:
-            continue
-        brewery = Brewery.objects.filter(id=node.id)[0]
-        brewery_beers = Beer.objects.filter(brewery=brewery)
-        beers += brewery_beers
+    if nodes is not None:
+        for node in nodes:
+            if node.id == HOME_NODE_ID:
+                continue
+            brewery = Brewery.objects.filter(id=node.id)[0]
+            brewery_beers = Beer.objects.filter(brewery=brewery)
+            beers += brewery_beers
     return beers
 
 

@@ -19,6 +19,17 @@ First, we have to add Google Maps API key into api_key.py file located inside be
 MAPS_API_KEY = "<INSERT API KEY HERE>"
 ```
 
+We have to install pipenv virtual environment:
+
+```
+pip install pipenv
+```
+
+Install project dependencies:
+```
+pipenv install
+```
+
 We have to activate Python virtual environment: <br/>
 
 ```
@@ -46,5 +57,5 @@ docker build -t satalia-beer-test -f Dockerfile .
 Run Docker container:
 
 ```
-docker run -it satalia-beer-test
+docker run -it -p 8888:8888 satalia_beer_test
 ```

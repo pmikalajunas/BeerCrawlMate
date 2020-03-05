@@ -81,6 +81,9 @@ def get_christofides_solution(nodes, home_lat, home_long):
     start = timeit.default_timer()
     cfides = Christofides(nodes)
     route, distance = cfides.search()
+    # Return empty solution if Christofides fails.
+    if route is None:
+        return Solution()
     stop = timeit.default_timer()
 
     beers = get_beers(route)
