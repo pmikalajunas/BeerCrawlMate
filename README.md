@@ -5,8 +5,7 @@ Your guidance when feeling cheeky for a pint:P
 <img width="1202" alt="image" src="https://user-images.githubusercontent.com/47608028/172057365-adbb5049-2781-48de-9f79-8cc2ec70ab1c.png">
 
 <br/>
-Solution uses Django framework, due to ease in creation of database.<br/>
-Solution implements 3 different algorithms: <br/><br/>
+You'll find your favourite algos here: <br/><br/>
 <li>Greedy Search (Nearest-neighbour heuristic)</li>
 <li>Simulated Annealing</li>
 <li>Christofides Algorithm</li>
