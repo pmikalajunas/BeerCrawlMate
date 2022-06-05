@@ -1,7 +1,9 @@
-# Satalia Beer Test
-<p align="center">
-  <img src="https://i.ibb.co/BPkp6df/Screenshot-2020-03-04-at-23-43-36.png">
-</p>
+# BeerCrawlMate
+
+Your guidance when feeling cheeky for a pint:P
+
+<img width="1202" alt="image" src="https://user-images.githubusercontent.com/47608028/172057365-adbb5049-2781-48de-9f79-8cc2ec70ab1c.png">
+
 <br/>
 Solution uses Django framework, due to ease in creation of database.<br/>
 Solution implements 3 different algorithms: <br/><br/>
@@ -9,12 +11,6 @@ Solution implements 3 different algorithms: <br/><br/>
 <li>Simulated Annealing</li>
 <li>Christofides Algorithm</li>
 
-## Docker Image
-
-Built Docker image can be downloaded from:
-```
-https://hub.docker.com/repository/docker/pmikalajunas/satalia-beer-test
-```
 
 ## Running
 
